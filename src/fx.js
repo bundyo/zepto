@@ -35,12 +35,13 @@
 
   $.fn.stop = function(stopAll, gotoEnd) {
     var that = this;
+
     var stopTransition = function (selection, gotoEnd) {
       if (!gotoEnd) {
         var animProperties = selection.animProperties;
         if (!animProperties) return;
 
-        var style = window.getComputedStyle(selection[0], null),
+        var style = document.defaultView.getComputedStyle(selection[0], null),
             cssValues = {},
             prop;
 
