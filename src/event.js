@@ -68,6 +68,15 @@
       });
     });
   };
+  $.fn.proxy = function( fn, proxy ) {
+    var output = null;
+    if ( fn ) {
+      output = function() {
+        return fn.apply( proxy || this, arguments );
+      };
+    }
+    return output;
+  };
 
   var eventMethods = ['preventDefault', 'stopImmediatePropagation', 'stopPropagation'];
   function createProxy(event) {
@@ -95,7 +104,7 @@
     return this.each(function(){
       remove(this, event, callback, selector);
     });
-  }
+  };
 
   $.fn.live = function(event, callback){
     $(document.body).delegate(this.selector, event, callback);
