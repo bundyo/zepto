@@ -40,17 +40,17 @@
         var animProperties = selection.animProperties;
         if (!animProperties) return;
 
-        var style = window.getComputedStyle(selection[0], null);
-        var cssValues = {};
-        var prop;
+        var style = window.getComputedStyle(selection[0], null),
+            cssValues = {},
+            prop;
 
         for (prop in animProperties)
           cssValues[animProperties[prop]] = style.getPropertyValue(animProperties[prop]);
 
         selection.css(selection.getCssPrefix() + 'transition', 'none');
 
-        for (prop in cssValues)
-          selection.css(prop, cssValues[prop]);
+        selection.css( cssValues);
+
       } else
         selection.css(that.getCssPrefix() + 'transition-property', 'none');
 
