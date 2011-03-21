@@ -62,6 +62,10 @@
     this.activateTask();
   };
 
+  $.fn.clearQueue = function() {
+    delete this.timeline[this.selector];
+  };
+
   $.fn.queue = function( step ) {
     if (!(this.selector in this.timeline))
       this.timeline[this.selector] = [];
@@ -75,7 +79,7 @@
     this.timeline[this.selector].shift();
 
     if (this.timeline[this.selector] == [])
-      delete this.timeline[this.selector]
+      delete this.timeline[this.selector];
   };
 
   $.fn.delay = function( timeSpan ) {
