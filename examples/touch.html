@@ -1,0 +1,50 @@
+<html>
+<head>
+    <title></title>
+    
+    <style type="text/css">
+        .animator,
+        .animator2,
+        .animator3 {
+            left: 200px;
+            top: 200px;
+            width: 100px;
+            height: 100px;
+            border: 1px solid black;
+            position: absolute;
+        }
+        .animator2 {
+            left: 800px;
+            top: 200px;
+        }
+        .info {
+            width: 500px;
+            height: 100px;
+            padding: 5px 10px;
+            border: 1px solid #ff4500;
+            background: #ffffe0;
+            font: normal 12px/23px Arial, Helvetica, sans-serif;
+        }
+    </style>
+
+    <script type="text/javascript" src="../src/zepto.js"></script>
+    <script type="text/javascript" src="../src/event.js"></script>
+    <script type="text/javascript" src="../src/fx.js"></script>
+    <script type="text/javascript" src="../src/touch.js"></script>
+
+    <script type="text/javascript">
+
+        var start = function () {
+            $('.animator').swipe( function () { alert('swipe'); } );
+        };
+
+        $(document).ready(start); 
+
+    </script>
+</head>
+<body>
+    <div class="info">Touch events where we have them (WebKits, Firefoxes).</div>
+    <div class="animator">HELLO WORLD</div>
+    <div class="animator2">HELLO WORLD</div>
+</body>
+</html>

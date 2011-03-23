@@ -5,10 +5,12 @@ var Zepto = (function(selector, context) {
   var featureCheck = document.createElement('div');
   featureCheck.style.cssText = '-moz-transform-origin: 0px 0px; -webkit-transform-origin: 0px 0px; -o-transform-origin: 0px 0px; -ms-transform-origin: 0px 0px; position: absolute; top: -10000px;';
   document.documentElement.appendChild(featureCheck);
-  browser.Firefox = getComputedStyle(featureCheck).getPropertyValue('-moz-transform-origin') == '0px 0px';
-  browser.WebKit = getComputedStyle(featureCheck).getPropertyValue('-webkit-transform-origin') == '0px 0px';
-  browser.Opera = getComputedStyle(featureCheck, null).getPropertyValue('-o-transform-origin') == '0px 0px';
-  browser.IE = getComputedStyle(featureCheck, null).getPropertyValue('-ms-transform-origin') == '0px 0px';
+  var featStyle = getComputedStyle(featureCheck);
+  browser.Firefox = featStyle.getPropertyValue('-moz-transform-origin') == '0px 0px';
+  browser.WebKit = featStyle.getPropertyValue('-webkit-transform-origin') == '0px 0px';
+  browser.Opera = featStyle.getPropertyValue('-o-transform-origin') == '0px 0px';
+  browser.IE = featStyle.getPropertyValue('-ms-transform-origin') == '0px 0px';
+  browser.name = browser.Firefox ? 'Firefox' : browser.WebKit ? 'WebKit' : browser.Opera ? 'Opera' : browser.IE ? 'IE' : 'non-supported';
   document.documentElement.removeChild(featureCheck);
   featureCheck = null;
 
@@ -103,6 +105,7 @@ var Zepto = (function(selector, context) {
     selector: "",
     length: 0,
     timeline: {},
+    browser: browser.name,
     forEach: [].forEach,
     map: [].map,
     reduce: [].reduce,
@@ -307,12 +310,10 @@ var Zepto = (function(selector, context) {
     getEventPrefix: function () {
       if (!this._eventPrefix) {
         this._eventPrefix = '';
-        for (var idx in browser)
-          if (browser[idx])
-            switch (idx) {
-              case 'WebKit': this._eventPrefix = 'webkit'; break;
-              case 'Opera': this._eventPrefix = 'o'; break;
-            }
+        switch (browser.name) {
+          case 'WebKit': this._eventPrefix = 'webkit'; break;
+          case 'Opera': this._eventPrefix = 'o'; break;
+        }
       }
 
       return this._eventPrefix;
@@ -320,14 +321,12 @@ var Zepto = (function(selector, context) {
     getCssPrefix: function () {
       if (!this._cssPrefix) {
         this._cssPrefix = '';
-        for (var idx in browser)
-          if (browser[idx])
-            switch (idx) {
-              case 'Firefox': this._cssPrefix = '-moz-'; break;
-              case 'WebKit': this._cssPrefix = '-webkit-'; break;
-              case 'Opera': this._cssPrefix = '-o-'; break;
-              case 'IE': this._cssPrefix = '-ms-'; break;
-            }
+        switch (browser.name) {
+          case 'Firefox': this._cssPrefix = '-moz-'; break;
+          case 'WebKit': this._cssPrefix = '-webkit-'; break;
+          case 'Opera': this._cssPrefix = '-o-'; break;
+          case 'IE': this._cssPrefix = '-ms-'; break;
+        }
       }
 
       return this._cssPrefix;
