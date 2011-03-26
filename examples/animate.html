@@ -51,10 +51,13 @@
             $('.animator2').stop(false, true);
         };
         var stop5 = function () {
-            $().stop(true);
+            $().stopAll();
         };
         var stop6 = function () {
-            $().stop(true, true);
+            $().stopAll(true);
+        };
+        var stop7 = function () {
+            $().stopAll(true, true);
         };
 
         var start = function () {
@@ -78,6 +81,7 @@
     <button onclick="stop3();">Stop & Complete 1</button>
     <button onclick="stop4();">Stop & Complete 2</button>
     <button onclick="stop5();">Stop All</button>
-    <button onclick="stop6();">Stop All & Complete</button>
+    <button onclick="stop6();">Stop All & Clear</button>
+    <button onclick="stop7();">Stop All Clear & Complete</button>
 </body>
 </html>

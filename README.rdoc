@@ -102,15 +102,21 @@ Context and .find calls are equivalent:
   die([, type[, function]]): remove live listener
   trigger(type): triggers an event
 
+  animate(transform, opacity, duration, callback):
+    use -webkit-transform/opacity and do an animation,
+    optionally supply a callback method to be executed after the animation is complete
+
+  stop( clearQueue, goToEnd ):
+    stop the animation, optionally clear the queue and go to end.
+
 == Non-jQuery functions
 
   pluck(property):
     return property for each element
     e.g. pluck('innerHTML') returns an array of all innerHTML properties of all elements found
 
-  anim(transform, opacity, duration, callback):
-    use -webkit-transform/opacity and do an animation,
-    optionally supply a callback method to be executed after the animation is complete
+  stopAll( clearQueue, goToEnd ):
+    stop all animations running on the given elements, same parameters as stop
 
 = Utility functions:
 

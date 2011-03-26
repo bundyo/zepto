@@ -76,6 +76,8 @@
   };
 
   $.fn.dequeue = function() {
+    if (!this.timeline[this.selector]) return;
+
     this.timeline[this.selector].shift();
 
     if (this.timeline[this.selector] == [])
@@ -87,6 +89,7 @@
 
     animationStep.type = 'delay';
     animationStep.duration = timeSpan;
+    animationStep.object = this;
 
     if (this.queue(animationStep) == 1)
       this.activateTask();
@@ -94,42 +97,54 @@
     return this;
   };
 
-  $.fn.stop = function( stopAll, gotoEnd ) {
-    var that = this;
+  var stopTransition = function ( selection, gotoEnd ) {
+    if (!selection || !('object' in selection)) return;
 
-    var stopTransition = function (selection, gotoEnd) {
-      if (!selection || !('object' in selection)) return;
+    var aObject = selection.object;
 
-      var aObject = selection.object;
+    if (!gotoEnd) {
 
-      if (!gotoEnd) {
+      var animProperties = selection.keys;
+      if (!animProperties) return;
 
-        var animProperties = selection.keys;
-        if (!animProperties) return;
+      var style = document.defaultView.getComputedStyle(aObject[0], null),
+          cssValues = {},
+          prop;
 
-        var style = document.defaultView.getComputedStyle(aObject[0], null),
-            cssValues = {},
-            prop;
+      for (prop in animProperties)
+        cssValues[animProperties[prop]] = style.getPropertyValue(animProperties[prop]);
 
-        for (prop in animProperties)
-          cssValues[animProperties[prop]] = style.getPropertyValue(animProperties[prop]);
+      aObject.css( aObject.getCssPrefix() + 'transition', 'none' );
 
-        aObject.css( that.getCssPrefix() + 'transition', 'none' );
+      aObject.css( cssValues );
 
-        aObject.css( cssValues );
-
-      } else
-        aObject.css( that.getCssPrefix() + 'transition', 'none' );
-
-      aObject.dequeue();
-    };
-
-    if (stopAll) {
-      for (var idx in this.timeline) {
-        stopTransition(that.timeline[idx][0], gotoEnd);
-      }
     } else
-      stopTransition(this.timeline[this.selector][0], gotoEnd);
+      aObject.css( aObject.getCssPrefix() + 'transition', 'none' );
+
+    aObject.dequeue();
+  };
+
+  $.fn.stop = function( clearQueue, gotoEnd ) {
+    
+    stopTransition(this.timeline[this.selector][0], gotoEnd);
+
+    if (clearQueue)
+      this.clearQueue();
+
+    return this;
+  };
+
+  $.fn.stopAll = function( clearQueue, gotoEnd ) {
+
+    for (var idx in this.timeline) {
+      stopTransition(this.timeline[idx][0], gotoEnd);
+
+      if (clearQueue && this.timeline[idx].length)
+        this.timeline[idx][0].object.clearQueue();
+
+      if (!clearQueue && this.timeline[idx].length)
+        this.timeline[idx][0].object.activateTask();
+    }
 
     return this;
   };
