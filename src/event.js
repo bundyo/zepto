@@ -48,6 +48,16 @@
       remove(element, events, fn);
     }
   };
+  
+  $.proxy = function( fn, proxy ) {
+    var output = null;
+    if ( fn ) {
+      output = function() {
+        return fn.apply( proxy || this, arguments );
+      };
+    }
+    return output;
+  };
 
   $.fn.bind = function(event, callback){
     return this.each(function(){
@@ -67,15 +77,6 @@
         remove(self, event, arguments.callee);
       });
     });
-  };
-  $.fn.proxy = function( fn, proxy ) {
-    var output = null;
-    if ( fn ) {
-      output = function() {
-        return fn.apply( proxy || this, arguments );
-      };
-    }
-    return output;
   };
 
   var eventMethods = ['preventDefault', 'stopImmediatePropagation', 'stopPropagation'];

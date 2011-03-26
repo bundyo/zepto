@@ -130,7 +130,18 @@ var Zepto = (function(selector, context) {
         acc.push(obj[propertyName]);
       return acc;
     },
+    add: function(selector, context) {
+      return this.merge( this, $$(context || document, selector) );
+    },
     remove: function(){ return this.each(function(){ this.parentNode.removeChild(this) }) },
+    appendTo: function(selector) {
+      $(selector).append(this);
+      return this;
+    },
+    prependTo: function(selector) {
+      $(selector).prepend(this);
+      return this;
+    },
     each: function(callback) {
       this.forEach(function(el, idx) {
         callback.call(el, idx, el)
@@ -138,8 +149,10 @@ var Zepto = (function(selector, context) {
       return this;
     },
     filter: function(selector) {
-      return $([].filter.call(this, function(element) {
+      return typeof selector === 'string' ? $([].filter.call(this, function(element) {
         return $$(element.parentNode, selector).indexOf(element) >= 0;
+      })) : $([].filter.call ( this, function (element, idx, arr) {
+        return selector.apply(element, [idx, arr]);
       }));
     },
     is: function(selector) {
@@ -340,6 +353,8 @@ var Zepto = (function(selector, context) {
     return target
   };
   $.qsa = $$ = function(element, selector) {
+    if (typeof(selector) !== 'string') return selector;
+
     return slice.call(element.querySelectorAll(selector))
   };
 
@@ -356,15 +371,16 @@ var Zepto = (function(selector, context) {
     $.fn[key] = (function(operator) {
       return function(html) {
         return this.each(function(index, element) {
-          if (html instanceof $) {
-            dom = html;
-            if (operator == "afterBegin" || operator == "afterEnd")
-              for (var i = 0; i < dom.length; i++) element['insertAdjacentElement'](operator, dom[dom.length - i - 1]);
-            else
-              for (var i = 0; i < dom.length; i++) element['insertAdjacentElement'](operator, dom[i]);
-          } else {
-            element['insertAdjacent' + (html instanceof Element ? 'Element' : 'HTML')](operator, html);
-          }
+          dom = html instanceof $ ? html : $(html);
+
+          if (operator == "afterBegin" || operator == "afterEnd")
+            for (var i = 0; i < dom.length; i++)
+              //element['insertAdjacentElement'](operator, dom[dom.length - i - 1]);
+              element.parentNode.insertBefore(element, dom[dom.length - i - 1]);
+          else
+            for (var i = 0; i < dom.length; i++)
+              //element['insertAdjacentElement'](operator, dom[i]);
+              element.parentNode.insertBefore(element, dom[i-1]);
         });
       };
     })(adjacencyOperators[key]);

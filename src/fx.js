@@ -44,8 +44,8 @@
       if (!this.getEventPrefix())
         eventName = eventName.toLowerCase();
 
-      typeof currentTransition.callback == 'function' && currentTransition.object.one( eventName, this.proxy( currentTransition.callback, this ) );
-      currentTransition.object.one( eventName, this.proxy( this.advanceQueue, this ) );
+      typeof currentTransition.callback == 'function' && currentTransition.object.one( eventName, $.proxy( currentTransition.callback, this ) );
+      currentTransition.object.one( eventName, $.proxy( this.advanceQueue, this ) );
 
       currentTransition.object.css( currentTransition.setup );
 
@@ -125,8 +125,9 @@
   };
 
   $.fn.stop = function( clearQueue, gotoEnd ) {
-    
-    stopTransition(this.timeline[this.selector][0], gotoEnd);
+
+    if (this.selector in this.timeline)
+      stopTransition(this.timeline[this.selector][0], gotoEnd);
 
     if (clearQueue)
       this.clearQueue();
@@ -137,7 +138,8 @@
   $.fn.stopAll = function( clearQueue, gotoEnd ) {
 
     for (var idx in this.timeline) {
-      stopTransition(this.timeline[idx][0], gotoEnd);
+      if (idx in this.timeline)
+        stopTransition(this.timeline[idx][0], gotoEnd);
 
       if (clearQueue && this.timeline[idx].length)
         this.timeline[idx][0].object.clearQueue();
