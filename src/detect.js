@@ -1,21 +1,30 @@
-(function($){
-  function detect(ua){
-    var ua = ua, os = {},
-      android = ua.match(/(Android)\s+([\d.]+)/),
-      iphone = ua.match(/(iPhone\sOS)\s([\d_]+)/),
-      ipad = ua.match(/(iPad).*OS\s([\d_]+)/),
-      webos = ua.match(/(webOS)\/([\d.]+)/),
-      blackberry = ua.match(/(BlackBerry).*Version\/([\d.]+)/);
-    if (android) os.android = true, os.version = android[2];
-    if (iphone) os.ios = true, os.version = iphone[2].replace(/_/g, '.'), os.iphone = true;
-    if (ipad) os.ios = true, os.version = ipad[2].replace(/_/g, '.'), os.ipad = true;
-    if (webos) os.webos = true, os.version = webos[2];
-    if (blackberry) os.blackberry = true, os.version = blackberry[2];
-    return os;
-  }
-  $.os = detect(navigator.userAgent);
-  $.__detect = detect;
+(function($) {
+    function detect(ua) {
+        var os = false, match = [],
+            agentRxs = {
+                android: /(Android)\s+(\d+)\.([\d.]+)/,
+                iphone: /(iPhone|iPod).*OS\s+(\d+)\.([\d.]+)/,
+                ipad: /(iPad).*OS\s+(\d+)_([\d_]+)/,
+                webos: /(webOS)\/(\d+)\.([\d.]+)/,
+                blackberry: /(BlackBerry).*?Version\/(\d+)\.([\d.]+)/
+            };
+        for (var agent in agentRxs) {
+            match = ua.match(agentRxs[agent]);
+            if (match) {
+                os = {};
+                os.name = agent.toLowerCase();
+                os[os.name] = true;
+                os.majorVersion = match[2];
+                os.minorVersion = match[3].replace(/_/g, '.');
+                os.ios = (agent in { iphone:0, ipod:0, ipad:0 });
+                
+                break;
+            }
+        }
+        return os;
+    }
 
-  var v = navigator.userAgent.match(/WebKit\/([\d.]+)/);
-  $.browser = v ? { webkit: true, version: v[1] } : { webkit: false };
+    $.os = detect(navigator.userAgent);
+    $.__detect = detect;
+
 })(Zepto);

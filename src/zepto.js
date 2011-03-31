@@ -3,7 +3,7 @@ var Zepto = (function(selector, context) {
       getComputedStyle = document.defaultView.getComputedStyle;
 
   var featureCheck = document.createElement('div');
-  featureCheck.style.cssText = '-moz-transform-origin: 0px 0px; -webkit-transform-origin: 0px 0px; -o-transform-origin: 0px 0px; -ms-transform-origin: 0px 0px; position: absolute; top: -10000px;';
+  featureCheck.style.cssText = '-moz-transform-origin: 0px 0px; -webkit-transform-origin: 0px 0px; -o-transform-origin: 0px 0px; -ms-transform-origin: 0px 0px; position: absolute; top: -10000px; visibility: hidden;';
   document.documentElement.appendChild(featureCheck);
   var featStyle = getComputedStyle(featureCheck);
   browser.Firefox = featStyle.getPropertyValue('-moz-transform-origin') == '0px 0px';
