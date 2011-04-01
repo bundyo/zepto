@@ -1,18 +1,6 @@
 var Zepto = (function(selector, context) {
-  var slice = [].slice, key, css, $$, fragmentRE, container, document = window.document, undefined, browser = {},
+  var slice = [].slice, key, css, $$, fragmentRE, container, document = window.document, undefined,
       getComputedStyle = document.defaultView.getComputedStyle;
-
-  var featureCheck = document.createElement('div');
-  featureCheck.style.cssText = '-moz-transform-origin: 0px 0px; -webkit-transform-origin: 0px 0px; -o-transform-origin: 0px 0px; -ms-transform-origin: 0px 0px; position: absolute; top: -10000px; visibility: hidden;';
-  document.documentElement.appendChild(featureCheck);
-  var featStyle = getComputedStyle(featureCheck);
-  browser.Firefox = featStyle.getPropertyValue('-moz-transform-origin') == '0px 0px';
-  browser.WebKit = featStyle.getPropertyValue('-webkit-transform-origin') == '0px 0px';
-  browser.Opera = featStyle.getPropertyValue('-o-transform-origin') == '0px 0px';
-  browser.IE = featStyle.getPropertyValue('-ms-transform-origin') == '0px 0px';
-  browser.name = browser.Firefox ? 'Firefox' : browser.WebKit ? 'WebKit' : browser.Opera ? 'Opera' : browser.IE ? 'IE' : 'non-supported';
-  document.documentElement.removeChild(featureCheck);
-  featureCheck = null;
 
   function classRE(name){ return new RegExp("(^|\\s)" + name + "(\\s|$)") }
   function compact(array){ return array.filter(function(item){ return item !== undefined && item !== null }) }
@@ -105,7 +93,6 @@ var Zepto = (function(selector, context) {
     selector: "",
     length: 0,
     timeline: {},
-    browser: browser.name,
     forEach: [].forEach,
     map: [].map,
     reduce: [].reduce,
@@ -319,30 +306,6 @@ var Zepto = (function(selector, context) {
         ((when !== undefined && !when) || $(this).hasClass(name)) ?
             $(this).removeClass(name) : $(this).addClass(name)
       });
-    },
-    getEventPrefix: function () {
-      if (!this._eventPrefix) {
-        this._eventPrefix = '';
-        switch (browser.name) {
-          case 'WebKit': this._eventPrefix = 'webkit'; break;
-          case 'Opera': this._eventPrefix = 'o'; break;
-        }
-      }
-
-      return this._eventPrefix;
-    },
-    getCssPrefix: function () {
-      if (!this._cssPrefix) {
-        this._cssPrefix = '';
-        switch (browser.name) {
-          case 'Firefox': this._cssPrefix = '-moz-'; break;
-          case 'WebKit': this._cssPrefix = '-webkit-'; break;
-          case 'Opera': this._cssPrefix = '-o-'; break;
-          case 'IE': this._cssPrefix = '-ms-'; break;
-        }
-      }
-
-      return this._cssPrefix;
     }
   };
 

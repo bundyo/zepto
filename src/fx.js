@@ -11,9 +11,9 @@
     animationStep.type = 'transition';
     animationStep.callback = callback;
     animationStep.setup = {};
-    animationStep.setup[this.getCssPrefix() + 'transition'] = 'all ' + (duration !== undefined ? duration : 0.5) + 's ' + (ease || '');
+    animationStep.setup[$.getCssPrefix() + 'transition'] = 'all ' + (duration !== undefined ? duration : 0.5) + 's ' + (ease || '');
     
-    cssValues[this.getCssPrefix() + 'transform'] = transforms.join(' ');
+    cssValues[$.getCssPrefix() + 'transform'] = transforms.join(' ');
 
     animationStep.keys = this.keys( cssValues );
     animationStep.CSS = cssValues;
@@ -40,8 +40,8 @@
         return;
       }
 
-      var eventName = this.getEventPrefix() + 'TransitionEnd';
-      if (!this.getEventPrefix())
+      var eventName = $.getEventPrefix() + 'TransitionEnd';
+      if (!$.getEventPrefix())
         eventName = eventName.toLowerCase();
 
       typeof currentTransition.callback == 'function' && currentTransition.object.one( eventName, $.proxy( currentTransition.callback, this ) );
@@ -114,12 +114,12 @@
       for (prop in animProperties)
         cssValues[animProperties[prop]] = style.getPropertyValue(animProperties[prop]);
 
-      aObject.css( aObject.getCssPrefix() + 'transition', 'none' );
+      aObject.css( $.getCssPrefix() + 'transition', 'none' );
 
       aObject.css( cssValues );
 
     } else
-      aObject.css( aObject.getCssPrefix() + 'transition', 'none' );
+      aObject.css( $.getCssPrefix() + 'transition', 'none' );
 
     aObject.dequeue();
   };
