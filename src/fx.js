@@ -1,5 +1,38 @@
 (function($) {
-  $.fn.animate = function(properties, duration, ease, callback) {
+
+    var stopTransition = function (selection, gotoEnd) {
+        if (!selection || !('object' in selection)) return;
+
+        var aObject = selection.object;
+
+        if (!gotoEnd) {
+
+            var animProperties = selection.keys;
+            if (!animProperties) return;
+
+            var style = document.defaultView.getComputedStyle(aObject[0], null),
+                    cssValues = {},
+                    prop;
+
+            for (prop in animProperties)
+                cssValues[animProperties[prop]] = style.getPropertyValue(animProperties[prop]);
+
+            aObject.css($.getCssPrefix() + 'transition', 'none');
+
+            aObject.css(cssValues);
+
+        } else
+            aObject.css($.getCssPrefix() + 'transition', 'none');
+
+        aObject.dequeue();
+    };
+
+    $.fn.extend({
+        timeline: {},
+
+        animate: function(properties, duration, ease, callback) {
+            duration = duration / 1000;
+
     var transforms = [], cssValues = {}, key, animationStep = {},
         transformProps = ['perspective', 'rotate', 'rotateX', 'rotateY', 'rotateZ', 'rotate3d', 'scale', 'scaleX', 'scaleY', 'scaleZ', 'scale3d', 'skew', 'skewX', 'skewY', 'translate', 'translateX', 'translateY', 'translateZ', 'translate3d', 'matrix', 'matrix3d'];
     for (key in properties)
@@ -23,9 +56,9 @@
       this.activateTask();
 
     return this;
-  };
+        },
 
-  $.fn.activateTask = function() {
+        activateTask: function() {
 
     if (this.selector in this.timeline && this.timeline[this.selector].length) {
       var currentTransition = this.timeline[this.selector][0];
@@ -54,37 +87,37 @@
       }, 0); // Opera Mobile is one dumb animal
     }
 
-  };
+        },
 
-  $.fn.advanceQueue = function() {
+        advanceQueue: function() {
     this.dequeue();
 
     this.activateTask();
-  };
+        },
 
-  $.fn.clearQueue = function() {
+        clearQueue: function() {
     delete this.timeline[this.selector];
-  };
+        },
 
-  $.fn.queue = function( step ) {
+        queue: function(step) {
     if (!(this.selector in this.timeline))
       this.timeline[this.selector] = [];
     
     this.timeline[this.selector].push(step);
 
     return this.timeline[this.selector].length;
-  };
+        },
 
-  $.fn.dequeue = function() {
+        dequeue: function() {
     if (!this.timeline[this.selector]) return;
 
     this.timeline[this.selector].shift();
 
     if (this.timeline[this.selector] == [])
       delete this.timeline[this.selector];
-  };
+        },
 
-  $.fn.delay = function( timeSpan ) {
+        delay: function(timeSpan) {
     var animationStep = {};
 
     animationStep.type = 'delay';
@@ -95,36 +128,9 @@
       this.activateTask();
 
     return this;
-  };
+        },
 
-  var stopTransition = function ( selection, gotoEnd ) {
-    if (!selection || !('object' in selection)) return;
-
-    var aObject = selection.object;
-
-    if (!gotoEnd) {
-
-      var animProperties = selection.keys;
-      if (!animProperties) return;
-
-      var style = document.defaultView.getComputedStyle(aObject[0], null),
-          cssValues = {},
-          prop;
-
-      for (prop in animProperties)
-        cssValues[animProperties[prop]] = style.getPropertyValue(animProperties[prop]);
-
-      aObject.css( $.getCssPrefix() + 'transition', 'none' );
-
-      aObject.css( cssValues );
-
-    } else
-      aObject.css( $.getCssPrefix() + 'transition', 'none' );
-
-    aObject.dequeue();
-  };
-
-  $.fn.stop = function( clearQueue, gotoEnd ) {
+        stop: function(clearQueue, gotoEnd) {
 
     if (this.selector in this.timeline)
       stopTransition(this.timeline[this.selector][0], gotoEnd);
@@ -133,9 +139,9 @@
       this.clearQueue();
 
     return this;
-  };
+        },
 
-  $.fn.stopAll = function( clearQueue, gotoEnd ) {
+        stopAll: function(clearQueue, gotoEnd) {
 
     for (var idx in this.timeline) {
       if (idx in this.timeline)
@@ -149,6 +155,11 @@
     }
 
     return this;
-  };
+        },
+
+        fadeTo: function(duration, opacity) {
+            this.animate({ 'opacity': opacity }, duration);
+        }
+    });
 
 })(Zepto);
