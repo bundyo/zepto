@@ -163,7 +163,7 @@
                     this.timeline[idx][0].object.activateTask();
             }
 
-            return this;
+            return this; 
         },
 
         fadeTo: function(duration, opacity) {
