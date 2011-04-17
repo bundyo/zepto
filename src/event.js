@@ -8,20 +8,11 @@
     function findHandlers(element, event, fn, selector) {
         event = parse(event);
         if (event.ns) var matcher = matcherFor(event.ns);
-        console.log((handlers[zid(element)] || []).filter(function(handler) {
-            return handler
-                    && (!event.e || handler.e == event.e)
-                    && (!event.ns || matcher.test(handler.ns))
-                    && (!fn || handler.fn == fn)
-                    && (!fn.guid || handler.fn.guid == fn.guid)
-                    && (!selector || handler.sel == selector);
-        }));
         return (handlers[zid(element)] || []).filter(function(handler) {
             return handler
                     && (!event.e || handler.e == event.e)
                     && (!event.ns || matcher.test(handler.ns))
-                    && (!fn || handler.fn == fn)
-                    && (!fn.guid || handler.fn.guid == fn.guid)
+                    && (!fn || !fn.guid || handler.fn.guid == fn.guid)
                     && (!selector || handler.sel == selector);
         });
     }
@@ -38,17 +29,14 @@
     $._guid = 1;
 
     function add(element, events, fn, selector, delegate) {
-        var id = zid(element), set = (handlers[id] || (handlers[id] = []));
+        var id = zid(element), set = (handlers[id] || (handlers[id] = [])), callback = delegate || fn;
         events.split(/\s/).forEach(function(event) {
-            if ( !fn.guid )
-                fn.guid = $._guid++;
-
-            if ( delegate && !delegate.guid )
-                delegate.guid = $._guid++;
+            if ( !callback.guid )
+                callback.guid = $._guid++;
 
             var handler = $.extend(parse(event), {fn: fn, sel: selector, del: delegate, i: set.length});
             set.push(handler);
-            element.addEventListener(handler.e, delegate || fn, false);
+            element.addEventListener(handler.e, callback, false);
         });
     }
 
@@ -77,7 +65,7 @@
             output = function() {
                 return fn.apply(proxy || this, arguments);
             };
-            proxy.guid = fn.guid = fn.guid || proxy.guid || $._guid++;
+            output.guid = proxy.guid = fn.guid = fn.guid || proxy.guid || $._guid++;
         }
         return output;
     };
