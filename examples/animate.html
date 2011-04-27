@@ -63,9 +63,9 @@
         };
 
         var start = function () {
-            $('.animator').animate({ rotate: '720deg', translate: '200px, 200px', color: 'white', 'background-color': 'red', opacity: .5 }, 10, 'ease-out');
-            $('.animator2').animate({ rotate: '-720deg', translate: '-200px, -200px', color: 'white', 'background-color': 'green', opacity: .2 }, 10, 'ease-in');
-            $('.animator3').animate({ rotate: '360deg', 'background-color': 'lightgreen' }, 2, 'linear').delay(1000).animate({ rotate: '0', 'background-color': 'lightblue' }, 2, 'linear');
+            $('.animator').animate({ rotate: '720deg', translate: '200px, 200px', color: 'white', 'background-color': 'red', opacity: .5 }, 10000, 'ease-out');
+            $('.animator2').animate({ rotate: '-720deg', translate: '-200px, -200px', color: 'white', 'background-color': 'green', opacity: .2 }, 10000, 'ease-in');
+            $('.animator3').animate({ rotate: '360deg', 'background-color': 'lightgreen' }, 2000, 'linear').delay(1000).animate({ rotate: '0', 'background-color': 'lightblue' }, 2000, 'linear');
         };
 
         $(document).ready(start); 

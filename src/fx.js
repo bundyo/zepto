@@ -92,7 +92,7 @@
 
                 setTimeout(function () {
                     currentTransition.object.css(currentTransition.CSS);
-                }, 0); // Opera Mobile is one dumb animal
+                }, 0);
             }
 
         },
